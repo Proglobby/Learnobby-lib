@@ -1,3 +1,3 @@
 # Learnobby Library
 
-This is a Java library that leverages the performance benefits of Rust. It includes a module named `functions` which contains functions for reading data and updating weights.
+This is a Java library for training models using machine learning tech, powerd by Rust, it takes the advantage of safety and perfoemance.
