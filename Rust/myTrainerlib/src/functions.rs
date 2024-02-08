@@ -21,9 +21,17 @@ pub mod functions {
 
     pub fn update_weights(indiv: Vec<f64>, weights_vec: &mut Vec<f64>, delta: f64, speed: f64) {
         let size = weights_vec.len();
-        for j in 0..weights_vec.len() {
+        for j in 0..weights_vec.len() - 1 {
             weights_vec[j] = weights_vec[j] + delta * indiv[j] * speed;
         }
+        println!(
+            "old bias  : {} and the operation is {} + {} * {} = {}",
+            weights_vec[weights_vec.len() - 1],
+            weights_vec[weights_vec.len() - 1],
+            delta,
+            speed,
+            (weights_vec[weights_vec.len() - 1] + delta * speed)
+        );
         weights_vec[size - 1] = weights_vec[weights_vec.len() - 1] + delta * speed;
         println!("bias change  : {}", weights_vec[weights_vec.len() - 1]);
     }

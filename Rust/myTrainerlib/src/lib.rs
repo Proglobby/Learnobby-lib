@@ -4,6 +4,7 @@ use jni::sys::{
     _jobject, jboolean, jdouble, jdoubleArray, jint, jintArray, jobject, jobjectArray, jsize,
     jstring, JNI_COMMIT,
 };
+use std::time::{self, Instant};
 mod functions;
 use functions::functions::read_data;
 use jni::JNIEnv;
@@ -22,6 +23,7 @@ pub extern "system" fn Java_BinTrainer_learn<'local>(
     weights: jdoubleArray,
     path: JString,
 ) -> jdoubleArray {
+    let start = time::Instant::now();
     println!("entered");
     let size = env.get_array_length(weights).unwrap();
     let mut weights_vec: Vec<f64> = vec![0.0; size as usize];
@@ -49,6 +51,7 @@ pub extern "system" fn Java_BinTrainer_learn<'local>(
                 println!("{} + {}", weights_vec[j], data[i][j]);
                 z = z + weights_vec[j] * data[i][j];
             }
+            println!("{} + 1", weights_vec[weights_vec.len() - 1]);
             z = z + weights_vec[weights_vec.len() - 1];
             println!("z = {}", z);
             let mut yp = 0;
@@ -60,8 +63,18 @@ pub extern "system" fn Java_BinTrainer_learn<'local>(
             let delta = data[i][data[i].len() - 1] - yp as f64;
             if delta != 0 as f64 {
                 err = true;
+                println!(
+                    "test for the bias just before the abort : {}",
+                    &mut weights_vec[(size - 1) as usize]
+                );
+
                 update_weights(data[i].clone(), &mut weights_vec, delta, speed);
             }
+            println!(
+                "test for the bias in the end of iteratin {} : {}",
+                counter,
+                weights_vec[weights_vec.len() - 1]
+            );
         }
         counter = counter + 1;
     }
@@ -79,6 +92,10 @@ pub extern "system" fn Java_BinTrainer_learn<'local>(
     let _ = env
         .set_double_array_region(output, 0, weights_vec.as_slice())
         .unwrap();
+    let end = time::Instant::now();
+    let duration = (end - start).as_millis();
+    println!("duration from the debug: {}", duration);
+
     output
 }
 
