@@ -24,15 +24,6 @@ pub mod functions {
         for j in 0..weights_vec.len() - 1 {
             weights_vec[j] = weights_vec[j] + delta * indiv[j] * speed;
         }
-        println!(
-            "old bias  : {} and the operation is {} + {} * {} = {}",
-            weights_vec[weights_vec.len() - 1],
-            weights_vec[weights_vec.len() - 1],
-            delta,
-            speed,
-            (weights_vec[weights_vec.len() - 1] + delta * speed)
-        );
         weights_vec[size - 1] = weights_vec[weights_vec.len() - 1] + delta * speed;
-        println!("bias change  : {}", weights_vec[weights_vec.len() - 1]);
     }
 }
