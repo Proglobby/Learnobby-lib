@@ -74,7 +74,8 @@ public class BinTrainer {
         // This actually loads the shared object that we'll be creating.
         // The actual location of the .so or .dll may differ based on your
         // platform.
-        System.load("C:\\Users\\MSI\\IdeaProjects\\RustJava\\Rust\\myTrainerlib\\target\\debug\\myTrainerlib.dll");
+        String home = System.getProperty("user.home");
+        System.load(home + "\\IdeaProjects\\RustJava\\Rust\\myTrainerlib\\target\\release\\myTrainerlib.dll");
     }
 
     public double[][] getIndivList() {
