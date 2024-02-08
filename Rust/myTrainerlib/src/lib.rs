@@ -24,7 +24,6 @@ pub extern "system" fn Java_BinTrainer_learn<'local>(
     path: JString,
 ) -> jdoubleArray {
     let start = time::Instant::now();
-    println!("entered");
     let size = env.get_array_length(weights).unwrap();
     let mut weights_vec: Vec<f64> = vec![0.0; size as usize];
     let mut data: Vec<Vec<f64>> = Vec::new();
@@ -36,24 +35,15 @@ pub extern "system" fn Java_BinTrainer_learn<'local>(
     let _ = env
         .get_double_array_region(weights, 0, weights_vec.as_mut_slice())
         .unwrap();
-    println!("first of all {}", weights_vec[weights_vec.len() - 1]);
-
-    println!("size now is : {}", weights_vec.len());
-    for i in 0..size as usize {
-        println!("{}", weights_vec[i]);
-    }
 
     while err && counter < max_iterations {
         err = false;
         for i in 0..data.len() {
             let mut z: f64 = 0.0;
             for j in 0..weights_vec.len() - 1 {
-                println!("{} + {}", weights_vec[j], data[i][j]);
                 z = z + weights_vec[j] * data[i][j];
             }
-            println!("{} + 1", weights_vec[weights_vec.len() - 1]);
             z = z + weights_vec[weights_vec.len() - 1];
-            println!("z = {}", z);
             let mut yp = 0;
             if z >= 0_f64 {
                 yp = 1;
@@ -63,38 +53,19 @@ pub extern "system" fn Java_BinTrainer_learn<'local>(
             let delta = data[i][data[i].len() - 1] - yp as f64;
             if delta != 0 as f64 {
                 err = true;
-                println!(
-                    "test for the bias just before the abort : {}",
-                    &mut weights_vec[(size - 1) as usize]
-                );
-
                 update_weights(data[i].clone(), &mut weights_vec, delta, speed);
             }
-            println!(
-                "test for the bias in the end of iteratin {} : {}",
-                counter,
-                weights_vec[weights_vec.len() - 1]
-            );
         }
         counter = counter + 1;
     }
 
-    println!("{} screaming from rust in {}", data[0][2], counter);
-    for i in 0..size as usize {
-        println!("{}", weights_vec[i]);
-    }
-    println!(
-        "from rust the vector : {} and last element is : {}",
-        weights_vec.len(),
-        weights_vec[weights_vec.len() - 1]
-    );
     let output = env.new_double_array(size as i32).unwrap();
     let _ = env
         .set_double_array_region(output, 0, weights_vec.as_slice())
         .unwrap();
     let end = time::Instant::now();
     let duration = (end - start).as_millis();
-    println!("duration from the debug: {}", duration);
+    println!("duration: {}", duration);
 
     output
 }
