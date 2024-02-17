@@ -7,10 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BinTrainer {
-    private double[][] indivList;
 
     private Perceptron perceptron;
-
+    int params;
 
 
     BufferedReader reader;
@@ -19,27 +18,17 @@ public class BinTrainer {
         String line;
         int j = 0;
         List<List<Double>> list = new ArrayList<>();
-        while((line = reader.readLine()) != null){
-            List<Double> temp = new ArrayList<>();
-            String[] strings = line.split(" ");
-            for (int i = 0; i < strings.length; i++) {
-                temp.add(Double.parseDouble(strings[i]));
-            }
-            list.add(temp);
-        }
-        indivList = new double[list.size()][list.get(0).size()];
-        for (int i = 0; i < list.size(); i++){
-            for (int k = 0; k < list.get(i).size(); k++) {
-                indivList[i][k] = list.get(i).get(k);
-            }
-        }
+        line = reader.readLine();
+        line = reader.readLine();
+        String[] strings = line.split(",");
+        params = strings.length;
     }
 
-    public Model fit(int maxIteration, double speed, String dataSetPath) throws IOException {
+    public Model fit(int maxIteration, double speed, String dataSetPath, String positiveClass) throws IOException {
         loadDataSet(dataSetPath);
-        perceptron = new Perceptron(indivList[0].length, 0.5);
+        perceptron = new Perceptron(params, 0.5);
         perceptron.initWeights();
-        perceptron.setWeights(learn(maxIteration, speed, this.perceptron.getWeights(), dataSetPath));
+        perceptron.setWeights(learn(maxIteration, speed, this.perceptron.getWeights(), dataSetPath, positiveClass));
         List<Double> output = new ArrayList<>();
         for (int i = 0; i < perceptron.getWeights().length; i++) {
             output.add(perceptron.getWeights()[i]);
@@ -48,7 +37,7 @@ public class BinTrainer {
         return model;
     }
 
-    public boolean predictSingle(Model model, List<Double> indiv){
+    public boolean predictSingle(Model model, List<Double> indiv, String positiveClass){
         if (model.getParameters().size() != indiv.size() + 1){
             throw new NotSameLengthException();
         }else{
@@ -65,7 +54,7 @@ public class BinTrainer {
     }
 
 
-    public native double[] learn(int maxIteration, double speed, double[] weights, String path);
+    public native double[] learn(int maxIteration, double speed, double[] weights, String path, String positiveClass);
 
     public native ArrayList<Double> testinho(int size);
 
@@ -78,11 +67,5 @@ public class BinTrainer {
         System.load(home + "\\IdeaProjects\\RustJava\\Rust\\myTrainerlib\\target\\release\\myTrainerlib.dll");
     }
 
-    public double[][] getIndivList() {
-        return indivList;
-    }
 
-    public void setIndivList(double[][] indivList) {
-        this.indivList = indivList;
-    }
 }
