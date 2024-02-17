@@ -22,6 +22,7 @@ pub extern "system" fn Java_BinTrainer_learn<'local>(
     speed: jdouble,
     weights: jdoubleArray,
     path: JString,
+    positive_class: JString,
 ) -> jdoubleArray {
     let start = time::Instant::now();
     let size = env.get_array_length(weights).unwrap();
@@ -29,7 +30,9 @@ pub extern "system" fn Java_BinTrainer_learn<'local>(
     let mut data: Vec<Vec<f64>> = Vec::new();
     let temp: String = env.get_string(path).unwrap().into();
     let path: &str = &temp;
-    read_data(&mut data, path);
+    let temp: String = env.get_string(positive_class).unwrap().into();
+    let positive_class: &str = &temp;
+    read_data(&mut data, path, positive_class);
     let mut err: bool = true;
     let mut counter: i32 = 0;
     let _ = env

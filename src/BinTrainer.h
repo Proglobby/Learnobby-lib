@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     BinTrainer
  * Method:    learn
- * Signature: (ID[DLjava/lang/String;)[D
+ * Signature: (ID[DLjava/lang/String;Ljava/lang/String;)[D
  */
 JNIEXPORT jdoubleArray JNICALL Java_BinTrainer_learn
-  (JNIEnv *, jobject, jint, jdouble, jdoubleArray, jstring);
+  (JNIEnv *, jobject, jint, jdouble, jdoubleArray, jstring, jstring);
 
 /*
  * Class:     BinTrainer
