@@ -8,8 +8,7 @@ int dotProduct(int a[], int b[], int n)
     }
     return dot;
 }
-{
-}
+
 int main()
 {
     int a[3] = {1, 2, 3};
