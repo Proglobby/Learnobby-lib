@@ -5,7 +5,7 @@ This is a Java library for training models using machine learning tech, powerd b
 # Set-Up
 ## Step 1
 Download the JAR file from this link:
-[Download JAR File](https://github.com/MossaabDev/Learnobby-lib/raw/main/out/production/RustJava/MyTrainerLib.jar)
+[Download JAR File](https://github.com/Proglobby/Learnobby-lib/releases/tag/v0.0.1-alpha)
 ## Step 2
 Add the JAR file to your project
 ### Intlij IDEA
