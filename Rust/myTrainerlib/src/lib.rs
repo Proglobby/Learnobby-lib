@@ -6,6 +6,7 @@ use jni::sys::{
 };
 use std::time::{self, Instant};
 mod functions;
+mod activation_funcs;
 use functions::functions::read_data;
 use jni::JNIEnv;
 use rand::distributions::weighted;
@@ -73,73 +74,4 @@ pub extern "system" fn Java_BinTrainer_learn<'local>(
     output
 }
 
-/*
-#[no_mangle]
-pub extern "system" fn Java_BinTrainer_testinho(env: JNIEnv, _: jobject, size: jint) -> jobject {
-    /*let mut vectorinho = Vec::new();
-    for i in 0..size as usize {
-        vectorinho.push(rand::thread_rng().gen_range(-1.0..1.0) as f64);
-    }
-    let arr: &[f64] = vectorinho.as_slice();
-    let result = env.new_double_array(size).unwrap();
-    env.set_double_array_region(result, 0, &arr).unwrap();
-    result
-    */
-    let list = List::arraylist(&env, Class::Double(&env).unwrap()).unwrap();
-    for i in 0..size as usize {
-        let rand = Object::new_Double(&env, rand::thread_rng().gen_range(-1.0..1.0)).unwrap();
-        list.add(&env, &rand);
-    }
-    println!("{}", list.size(&env).unwrap());
 
-    list.into()
-}
-
-#[no_mangle]
-pub fn Java_BinTrainer_getStrings(env: JNIEnv<'_>, _: JClass) -> jobject {
-    // Create a new java.util.ArrayList containing java.lang.String's
-    let list = List::arraylist(&env, Class::String(&env).unwrap()).unwrap();
-
-    // Add 10 Strings to the List
-    for i in 0..10 {
-        let string = JavaString::from_rust(&env, format!("Iteration {}", i)).unwrap();
-        list.add(&env, &Object::new_string(&env, "wrt").unwrap())
-            .unwrap();
-    }
-
-    list.into()
-}
-
-
-    pub unsafe extern "system" fn Java_BinTrainer_testinho(
-    env: JNIEnv,
-
-    _: JObject,
-
-    size: i32,
-) -> jobject {
-    let cls_arraylist = env.find_class("java/util/ArrayList").unwrap();
-
-    let arraylist = env
-        .new_object(cls_arraylist, "(I)V", &[JValue::from(8)])
-        .unwrap();
-
-    let mut i = 0;
-
-    while i < 7 {
-        // Add items
-
-        env.call_method(
-            arraylist,
-            "add",
-            "(Ljava/lang/Object;)Z",
-            &[JValue::from(0)],
-        )
-        .unwrap();
-
-        i += 1;
-    }
-
-    *arraylist
-}
-*/
