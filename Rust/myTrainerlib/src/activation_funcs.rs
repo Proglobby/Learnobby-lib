@@ -32,3 +32,23 @@ pub mod tanh{
 
 
 }
+
+pub mod relu{
+    //relu funciton
+    pub fn relu(x: f64) -> f64 {
+        if x > 0_f64 {
+            x
+        } else {
+            0_f64
+        }
+    }
+
+    //derivation of relu 
+    pub fn relu_derivative(x: f64) -> f64 {
+        if x > 0_f64 {
+            1_f64
+        } else {
+            0_f64
+        }
+    }
+}

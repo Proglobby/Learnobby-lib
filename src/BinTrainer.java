@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -63,8 +65,10 @@ public class BinTrainer {
         // This actually loads the shared object that we'll be creating.
         // The actual location of the .so or .dll may differ based on your
         // platform.
-        String home = System.getProperty("user.home");
-        System.load(home + "\\IdeaProjects\\RustJava\\Rust\\myTrainerlib\\target\\release\\myTrainerlib.dll");
+        //String home = System.getProperty("user.home");
+        URL url = BinTrainer.class.getResource("myTrainerlib.dll");
+        File file = new File(url.getPath());
+        System.load(file.getAbsolutePath());
     }
 
 
