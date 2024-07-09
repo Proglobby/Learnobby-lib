@@ -1,2 +1,0 @@
- boolean result = binTrainer.predictSingle(model, List.of(8.48, 152.7, 153.0, 76.0, 2.0), "orange");
-            boolean result = binTrainer.predictSingle(model, List.of(10.8, 186.77, 159.0, 63.0, 18.0), "orange");
