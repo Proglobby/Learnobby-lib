@@ -9,10 +9,6 @@ public class MLPClassifier {
     double bias;
 
 
-    public MLPClassifier(int[] layers){
-        this.hiddenLayers = layers;
-    }
-
     enum ActivationFunction{
         SIGMOID, TANH, RELU
     }
