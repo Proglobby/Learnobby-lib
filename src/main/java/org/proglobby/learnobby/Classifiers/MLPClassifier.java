@@ -12,6 +12,8 @@ public class MLPClassifier {
     enum ActivationFunction{
         SIGMOID, TANH, RELU
     }
+
+
     double learningRate = 0.01f;
     double momentum = 0.9f;
     double weightDecay = 0.0001f;
@@ -74,7 +76,17 @@ public class MLPClassifier {
             return new MLPClassifier(this);
         }
     }
-
+    /**
+     * <h1>fit</h1>
+     * <b>This method trains the model using the given dataset</b>
+     * <h2>Example</h1>
+     * <pre>
+     *    {@code classifier.fit(dataSet);}
+     *</pre>
+     * @param dataSet The dataset to train the model
+     * @return void
+     *
+     */
     public void fit(DataSet dataSet){
         // Train the model
         initWeights(dataSet.columns);
@@ -93,6 +105,7 @@ public class MLPClassifier {
         }
 
     }
+
 
     private void forwardPropagation(double[] input){
         // Forward propagation
