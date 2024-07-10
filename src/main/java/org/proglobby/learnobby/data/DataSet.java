@@ -7,7 +7,7 @@ public class DataSet {
     public int columns = 0;
     public DataSet(DataFrame dataFrame, String targetColumn){
         this.length = dataFrame.data.size();
-        this.columns = dataFrame.columns.size();
+        this.columns = dataFrame.columns.size()-1;
         this.Xdata = new double[length][columns - 1];
         this.Ydata = new double[length];
         for (int i = 0; i < length; i++) {
