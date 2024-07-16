@@ -104,8 +104,13 @@ public class MLPClassifier {
         outputLayer = new Layer();
         if (dataSet.target.size() == 2){
             outputLayer.neurons = new Neuron[1];
+            Neuron neuron = new Neuron();
+            neuron.weights = new double[hiddenLayers[hiddenLayers.length-1].neurons.length+1]
+            outputLayer.neurons[0] = neuron;
+            System.out.println("here"+dataSet.target);
         }else{
             outputLayer.neurons = new Neuron[dataSet.target.size()];
+
         }
 
         // Train the model

@@ -52,18 +52,20 @@ public class DataFrame {
 //    }
 
     public DataSet intoDataSet(String targetColumn) {
+        DataSet dataSet = new DataSet();
         double Xdata[][] = new double[data.size()][columns.size() - 1];
         double Ydata[] = new double[data.size()];
         for (int i = 0; i < data.size(); i++) {
             for (int j = 0; j < columns.size(); j++) {
                 if (columns.get(j).equals(targetColumn)) {
                     Ydata[i] = data.get(i).get(columns.get(j));
+                    dataSet.target.add(Ydata[i]);
                 } else {
                     Xdata[i][j] = data.get(i).get(columns.get(j));
                 }
             }
         }
-        DataSet dataSet = new DataSet();
+
         dataSet.Xdata = Xdata;
         dataSet.Ydata = Ydata;
         dataSet.length = Ydata.length;
