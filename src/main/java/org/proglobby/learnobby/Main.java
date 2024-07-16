@@ -1,7 +1,7 @@
 package org.proglobby.learnobby;
 
 
-import org.proglobby.learnobby.Classifiers.MLPClassifier;
+import org.proglobby.learnobby.structure.Classifiers.MLPClassifier;
 import org.proglobby.learnobby.data.DataFrame;
 import org.proglobby.learnobby.data.DataSet;
 

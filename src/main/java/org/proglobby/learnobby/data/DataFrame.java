@@ -8,6 +8,7 @@ import java.util.*;
 public class DataFrame {
     List<String> columns;
     List<LinkedHashMap<String, Double>> data = new ArrayList<>();
+    Set<Double> target = new HashSet();
 
     public DataFrame(String path) throws FileNotFoundException {
         loadFromCsv(path);

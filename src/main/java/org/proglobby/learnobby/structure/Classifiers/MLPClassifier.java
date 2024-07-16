@@ -1,10 +1,16 @@
-package org.proglobby.learnobby.Classifiers;
+package org.proglobby.learnobby.structure.Classifiers;
 
 import org.proglobby.learnobby.Activations;
 import org.proglobby.learnobby.data.DataSet;
+import org.proglobby.learnobby.structure.Layer;
+import org.proglobby.learnobby.structure.Neuron;
+
+import java.util.Arrays;
 
 public class MLPClassifier {
-    int[] hiddenLayers;
+    Layer[] hiddenLayers;
+
+    Layer outputLayer;
     double[] weights;
     double bias;
 
@@ -36,7 +42,7 @@ public class MLPClassifier {
 
 
     public static class Builder{
-        int[] hiddenLayers;
+        Layer[] hiddenLayers;
         double learningRate = 0.01;
         double momentum = 0.9f;
         double weightDecay = 0.0001f;
@@ -65,7 +71,14 @@ public class MLPClassifier {
         }
 
         public Builder setHiddenLayers(int[] hiddenLayers){
-            this.hiddenLayers = hiddenLayers;
+            this.hiddenLayers = new Layer[hiddenLayers.length];
+            for (int i = 0; i < hiddenLayers.length; i++) {
+                this.hiddenLayers[i] = new Layer();
+                this.hiddenLayers[i].neurons = new Neuron[hiddenLayers[i]];
+                for (int j = 0; j < this.hiddenLayers[i].neurons.length; j++) {
+                    this.hiddenLayers[i].neurons[j] = new Neuron();
+                }
+            }
             return this;
         }
         public Builder setActivationFunction(ActivationFunction activationFunction){
@@ -88,6 +101,13 @@ public class MLPClassifier {
      *
      */
     public void fit(DataSet dataSet){
+        outputLayer = new Layer();
+        if (dataSet.target.size() == 2){
+            outputLayer.neurons = new Neuron[1];
+        }else{
+            outputLayer.neurons = new Neuron[dataSet.target.size()];
+        }
+
         // Train the model
         initWeights(dataSet.columns);
         for (int i = 0; i < maxIterations; i++) {
@@ -107,28 +127,29 @@ public class MLPClassifier {
     }
 
 
-    private void forwardPropagation(double[] input){
+    private double forwardPropagation(double[] input){
         // Forward propagation
-        double z = 0;
-        for (int i = 0; i < hiddenLayers[0]; i++) {
-            for (int j = 0; j < input.length; j++) {
-                z += input[j] * weights[i];
+        for (int i = 0; i < hiddenLayers.length; i++) {
+            double[] output = new double[hiddenLayers[i].neurons.length];
+            for (int j = 0; j < hiddenLayers[i].neurons.length; j++) {
+                output[j] = Activations.sigmoid(dotProduct(input, hiddenLayers[i].neurons[j].weights) + hiddenLayers[i].neurons[j].bias);
             }
+            input = new double[output.length];
+            input = output;
         }
-        z += bias;
-        double a = 0;
-        switch (activationFunction){
-            case SIGMOID:
-                a = Activations.sigmoid(z);
-                break;
-            case TANH:
-                a = Activations.tanh(z);
-                break;
-            case RELU:
-                a = Activations.relu(z);
-                break;
+        //calculate for the ouput layout
+        double[] output = new double[outputLayer.neurons.length];
+        for (int i = 0; i < outputLayer.neurons.length; i++){
+            output[i] = Activations.sigmoid(dotProduct(input, outputLayer.neurons[i].weights) + bias);
         }
 
+        if (outputLayer.neurons.length <= 1){
+            return output[0];
+        }else{
+            output = Activations.softmax(output);
+            Arrays.sort(output);
+            return output[output.length-1];
+        }
 
     }
 
@@ -145,21 +166,29 @@ public class MLPClassifier {
 
     private void initWeights(int columns){
         // Initialize weights
-        if (hiddenLayers.length < 1) {
-            throw new IllegalArgumentException("Number of hiddenLayers must be greater than 0");
-        }else{
-            // count the number of weights
-            int numWeights = columns*hiddenLayers[0];
-            for (int i = 0; i < hiddenLayers.length - 1; i++) {
-                numWeights += hiddenLayers[i] * hiddenLayers[i + 1];
+        for (int i = 0; i < hiddenLayers.length; i++) {
+            for (int j = 0; j < hiddenLayers[i].neurons.length; j++) {
+                hiddenLayers[i].neurons[j].weights = new double[columns];
+                for (int k = 0; k < columns; k++) {
+                    hiddenLayers[i].neurons[j].weights[k] = Math.random();
+                }
+                hiddenLayers[i].neurons[j].bias = Math.random();
             }
-            weights = new double[numWeights];
-            System.out.println("Number of weights: " + numWeights);
         }
-        for (int i = 0; i < weights.length; i++) {
-            // Initialize weights for the input layer
-            weights[i] = Math.random();
+        for (Neuron neuron: outputLayer.neurons){
+            for (int i = 0; i < hiddenLayers[hiddenLayers.length -1].neurons.length; i++){
+                neuron.weights[i] = Math.random();
+            }
+            neuron.bias = Math.random();
         }
 
+    }
+
+    public double dotProduct(double[] a, double[] b){
+        double result = 0;
+        for (int i = 0; i < a.length; i++) {
+            result += a[i] * b[i];
+        }
+        return result;
     }
 }
