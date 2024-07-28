@@ -9,12 +9,12 @@ import java.io.FileNotFoundException;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        int[] layers = {3};
+        int[] layers = {1};
         MLPClassifier classifier = new MLPClassifier.Builder()
-                .setLearningRate(0.01)
+                .setLearningRate(0.1)
                 .setMomentum(0.9)
                 .setWeightDecay(0.0001)
-                .setMaxIterations(1000)
+                .setMaxIterations(10)
                 .setBatchSize(1)
                 .setHiddenLayers(layers)
                 .build();
@@ -22,11 +22,12 @@ public class Main {
         long start = System.currentTimeMillis();
         String irisPath = "C:\\Users\\MSI\\IdeaProjects\\Learnobby\\src\\main\\java\\org\\proglobby\\learnobby\\Classifiers\\data\\Iris - Iris.csv.csv";
         String testPath2 = Main.class.getClassLoader().getResource("test.csv").getPath();
-        System.out.println(testPath2);
+        String andPath = Main.class.getClassLoader().getResource("and.csv").getPath();
+        System.out.println(andPath);
         String testPath = "C:\\Users\\MSI\\IdeaProjects\\Learnobby\\src\\main\\java\\org\\proglobby\\learnobby\\Classifiers\\data\\test.csv";
-        DataFrame dataFrame = new DataFrame(testPath2);
+        DataFrame dataFrame = new DataFrame(andPath);
         DataSet dataSet = new DataSet();
-        dataSet = dataFrame.intoDataSet("species");
+        dataSet = dataFrame.intoDataSet("and");
         for (int i = 0; i < dataSet.length; i++) {
             System.out.println("Y: " + dataSet.Ydata[i]);
         }

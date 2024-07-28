@@ -69,7 +69,7 @@ public class DataFrame {
         dataSet.Xdata = Xdata;
         dataSet.Ydata = Ydata;
         dataSet.length = Ydata.length;
-        dataSet.columns = columns.size();
+        dataSet.columns = columns.size()-1;
         return dataSet;
     }
 
