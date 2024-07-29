@@ -100,7 +100,7 @@ public class MLPClassifier {
      * @return void
      *
      */
-    public void fit(DataSet dataSet){
+    public void fit(DataSet dataSet) throws Exception {
         outputLayer = new Layer();
         if (dataSet.target.size() == 2){
             outputLayer.neurons = new Neuron[1];
@@ -160,12 +160,12 @@ public class MLPClassifier {
     }
 
 
-    private double forwardPropagation(double[] input){
+    private double forwardPropagation(double[] input) throws Exception {
         // Forward propagation
         for (int i = 0; i < hiddenLayers.length; i++) {
             double[] output = new double[hiddenLayers[i].neurons.length];
             for (int j = 0; j < hiddenLayers[i].neurons.length; j++) {
-                output[j] = Activations.sigmoid(dotProduct(input, hiddenLayers[i].neurons[j].weights) + hiddenLayers[i].neurons[j].bias);
+                output[j] = activate(dotProduct(input, hiddenLayers[i].neurons[j].weights) + hiddenLayers[i].neurons[j].bias);
             }
             input = new double[output.length];
             input = output;
@@ -173,7 +173,7 @@ public class MLPClassifier {
         //calculate for the ouput layout
         double[] output = new double[outputLayer.neurons.length];
         for (int i = 0; i < outputLayer.neurons.length; i++){
-            output[i] = Activations.sigmoid(dotProduct(input, outputLayer.neurons[i].weights) + outputLayer.neurons[i].bias);
+            output[i] = activate(dotProduct(input, outputLayer.neurons[i].weights) + outputLayer.neurons[i].bias);
         }
 
         if (outputLayer.neurons.length <= 1){
@@ -231,6 +231,23 @@ public class MLPClassifier {
         }
         return sum;
     }
+
+    public double activate(double x) throws Exception {
+        switch (activationFunction){
+            case SIGMOID -> {
+                return Activations.sigmoid(x);
+            }
+            case RELU -> {
+                return Activations.relu(x);
+            }
+            case TANH -> {
+                return Activations.tanh(x);
+            }
+        }
+        Exception RuntimeException = new RuntimeException("No Activation function declared");
+        throw RuntimeException;
+    }
+
 
 
 }

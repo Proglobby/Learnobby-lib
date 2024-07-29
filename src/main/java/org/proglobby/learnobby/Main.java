@@ -8,7 +8,7 @@ import org.proglobby.learnobby.data.DataSet;
 import java.io.FileNotFoundException;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws Exception {
         int[] layers = {1};
         MLPClassifier classifier = new MLPClassifier.Builder()
                 .setLearningRate(0.1)
