@@ -1,6 +1,7 @@
 package org.proglobby.learnobby.structure.Classifiers;
 
 import org.proglobby.learnobby.Activations;
+import org.proglobby.learnobby.Loss;
 import org.proglobby.learnobby.data.DataSet;
 import org.proglobby.learnobby.structure.Layer;
 import org.proglobby.learnobby.structure.Neuron;
@@ -124,7 +125,12 @@ public class MLPClassifier {
                 throw new IllegalArgumentException("Batch size cannot be greater than the number of samples");
             }else{
                 for (int j = 0; j < dataSet.length; j++) {
-                    System.out.println("after"+forwardPropagation(dataSet.Xdata[j])+"with : wieghts : " + weightsToString());
+                    double output = forwardPropagation(dataSet.Xdata[j]);
+                    if (outputLayer.neurons.length <= 1){
+                        double error = Loss.binaryCrossEntropy(new double[]{dataSet.Ydata[j]}, new double[]{output});
+                        System.out.println(output+" : error : "+error+" feat : " + dataSet.Ydata[j]);
+                    }
+
                     backPropagation(new double[]{dataSet.Ydata[j]});
                     updateWeights();
                 }
@@ -177,8 +183,7 @@ public class MLPClassifier {
         }
 
         if (outputLayer.neurons.length <= 1){
-            System.out.println("bef "+output[0]);
-            return output[0] >= 0.5 ? 1:0;
+            return output[0];
         }else{
             output = Activations.softmax(output);
             int maxIndex = 0;
